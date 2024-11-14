@@ -4,7 +4,10 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
 import src.main.concurrency.classes.ImagePanel;
-import src.main.concurrency.utils.Utils;
+import src.main.concurrency.utils.ImageFileUtils;
+import src.main.concurrency.utils.ImagePanelUtils;
+import src.main.concurrency.utils.ScreenUtils;
+import src.main.concurrency.utils.ThreadingUtils;
 
 class Main {
     
@@ -15,14 +18,18 @@ class Main {
             return;
         }
         
-        BufferedImage img = Utils.loadImage(args[0]);
-        int squareSize = Utils.parseSquareSize(args[1]);
+        BufferedImage img = ImageFileUtils.loadImage(args[0]);
+        int squareSize = ScreenUtils.parseSquareSize(args[1]);
         
-        Dimension screenSize = Utils.getScreenSize();
-        Dimension imgSize = Utils.adjustImageSizeToScreen(img, screenSize);
+        Dimension screenSize = ScreenUtils.getScreenSize();
+        Dimension imgSize = ScreenUtils.adjustImageSizeToScreen(img, screenSize);
         
-        ImagePanel imagePanel = Utils.createImage(img, imgSize);
+        ImagePanel imagePanel = ImagePanelUtils.createImagePanel(img, imgSize);
 
-        Utils.processImage(args[2], img, imagePanel, squareSize);
+        if ("S".equalsIgnoreCase(args[2])) {
+            ThreadingUtils.processImageSingleThread(img, imagePanel, squareSize);
+        } else if ("M".equalsIgnoreCase(args[2])) {
+            ThreadingUtils.processImageMultiThread(img, imagePanel, squareSize);
+        }
     }
 }

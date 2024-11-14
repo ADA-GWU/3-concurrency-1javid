@@ -2,10 +2,9 @@ package src.main.concurrency.classes;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
-import src.main.concurrency.utils.Utils;
+import src.main.concurrency.utils.ImageProcessingUtils;
 
 public class SingleThread {
     private BufferedImage img;
@@ -30,26 +29,13 @@ public class SingleThread {
                 int heightBoundary = Math.min(squareSize, height - i);
                 int widthBoundary = Math.min(squareSize, width - j);
         
-                List<List<Integer>> rgbList = new ArrayList<>();
-                for (int k = 0; k < heightBoundary; k++) {
-                    for (int l = 0; l < widthBoundary; l++) {
-                        int rgb = img.getRGB(j + l, i + k);
-                        Color color = new Color(rgb);
-                        rgbList.add(List.of(color.getRed(), color.getGreen(), color.getBlue()));
-                    }
-                }
+                List<List<Integer>> rgbList = ImageProcessingUtils.getRgbListBySquareSize(heightBoundary, widthBoundary, img, i, j);
         
-                List<Integer> avgColor = Utils.colorAverage(rgbList);
+                List<Integer> avgColor = ImageProcessingUtils.colorAverage(rgbList);
                 Color newColor = new Color(avgColor.get(0), avgColor.get(1), avgColor.get(2));
         
-                for (int k = 0; k < heightBoundary; k++) {
-                    for (int l = 0; l < widthBoundary; l++) {
-                        img.setRGB(j + l, i + k, newColor.getRGB());
-                    }
-                }
-        
-                imagePanel.updateImage(img);
-        
+                ImageProcessingUtils.setNewRgbToImg(heightBoundary, widthBoundary, img, newColor, imagePanel, i, j);
+                
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
