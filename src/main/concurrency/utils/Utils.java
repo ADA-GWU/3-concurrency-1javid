@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import src.main.concurrency.classes.ImagePanel;
+import src.main.concurrency.classes.MultiThread;
 import src.main.concurrency.classes.SingleThread;
 
 public class Utils {
@@ -53,30 +55,68 @@ public class Utils {
     }
 
     public static Dimension adjustImageSizeToScreen(BufferedImage img, Dimension screenSize) {
-        int imgHeight = Math.min(img.getHeight(), screenSize.height);
-        int imgWidth = Math.min(img.getWidth(), screenSize.width);
-        return new Dimension(imgWidth, imgHeight);
+        int newHeight = img.getHeight(), newWidth = img.getWidth();
+
+        if (screenSize.height < newHeight) newHeight = screenSize.height;
+        if (screenSize.width < newWidth) newWidth = screenSize.width;
+        return new Dimension(newHeight, newWidth);
     }
 
-    public static JFrame createImageFrame(BufferedImage img, Dimension imgSize) {
+    public static ImagePanel createImage(BufferedImage img, Dimension imgSize) {
         JFrame frame = new JFrame();
         ImagePanel imagePanel = new ImagePanel(img);
         frame.add(imagePanel);
         frame.setSize(imgSize.width, imgSize.height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        return frame;
+        return imagePanel;
     }
 
     public static void processImage(String mode, BufferedImage img, ImagePanel imagePanel, int squareSize) {
         if ("S".equalsIgnoreCase(mode)) {
-            Thread blurThread = new Thread(() -> {
-                SingleThread singleThread = new SingleThread(img, imagePanel, squareSize);
-                singleThread.blurredImg();
-            });
-            blurThread.start();
+
+            SingleThread singleThread = new SingleThread(img, imagePanel, squareSize);
+
+            long before = System.currentTimeMillis();
+            singleThread.blurredImg();
+
+            long after = System.currentTimeMillis();
+            System.out.println("Time (ms): " + (after - before));
+
         } else if ("M".equalsIgnoreCase(mode)) {
-        
+
+            int cores = Runtime.getRuntime().availableProcessors();
+            System.out.println("Your laptop has " + cores + " cores.");
+
+            int threadSegment = img.getHeight() / cores;
+
+            List<MultiThread> threads = new ArrayList<>();
+
+            for (int i = 0; i < cores; i++) {
+                int sHeight = i * threadSegment;
+                int eHeight = (i + 1) * threadSegment;
+
+                if (i + 1 == cores) eHeight = img.getHeight();
+
+                threads.add(new MultiThread(img, sHeight, eHeight, imagePanel, squareSize));
+            }
+
+            long before = System.currentTimeMillis();
+
+            for (MultiThread thread : threads) {
+                thread.start();
+            }
+
+            for (MultiThread thread : threads) {
+                try {
+                    thread.join();
+                } catch (InterruptedException ex) {
+                    System.out.println(ex);
+                }
+            }
+
+            long after = System.currentTimeMillis();
+            System.out.println("Time (ms): " + (after - before));
         }
     }
 }

@@ -3,8 +3,6 @@ package src.main.concurrency;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JFrame;
-
 import src.main.concurrency.classes.ImagePanel;
 import src.main.concurrency.utils.Utils;
 
@@ -19,13 +17,12 @@ class Main {
         
         BufferedImage img = Utils.loadImage(args[0]);
         int squareSize = Utils.parseSquareSize(args[1]);
+        
         Dimension screenSize = Utils.getScreenSize();
         Dimension imgSize = Utils.adjustImageSizeToScreen(img, screenSize);
         
-        JFrame frame = Utils.createImageFrame(img, imgSize);
-        ImagePanel imagePanel = (ImagePanel) frame.getContentPane().getComponent(0);  // Get the ImagePanel to use in processing
+        ImagePanel imagePanel = Utils.createImage(img, imgSize);
 
         Utils.processImage(args[2], img, imagePanel, squareSize);
-        
     }
 }
