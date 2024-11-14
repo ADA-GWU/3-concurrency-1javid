@@ -21,6 +21,6 @@ public class ScreenUtils {
         if (screenSize.height < newHeight) newHeight = screenSize.height;
         if (screenSize.width < newWidth) newWidth = screenSize.width;
         System.out.println("Updated Frame Size: " + newHeight + "x" + newWidth);
-        return new Dimension(newHeight, newWidth);
+        return new Dimension(newWidth, newHeight);
     }
 }
