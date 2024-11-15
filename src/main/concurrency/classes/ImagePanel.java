@@ -12,12 +12,14 @@ public class ImagePanel extends JPanel{
         this.img = img;
     }
 
+    // Method to draw the image
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(img, 0, 0, this);       
+        g.drawImage(img, 0, 0, this); // Draw the image from the top-left corner
     }
 
+    // Method to update the image on the panel
     public void updateImage(BufferedImage img) {
         this.img = img;
         repaint();

@@ -13,42 +13,44 @@ public class ThreadingUtils {
         SingleThread singleThread = new SingleThread(img, imagePanel, squareSize);
 
         long before = System.currentTimeMillis();
-        singleThread.blurredImg();
-        long after = System.currentTimeMillis();
+        singleThread.blurredImg(); 
+        long after = System.currentTimeMillis(); 
 
-        System.out.println("Single-threaded Time (ms): " + (after - before));
+        System.out.println("Single-threaded Time (ms): " + (after - before)); 
     }
 
     public static void processImageMultiThread(BufferedImage img, ImagePanel imagePanel, int squareSize) {
-        int cores = Runtime.getRuntime().availableProcessors();
+        int cores = Runtime.getRuntime().availableProcessors(); 
         System.out.println("Your laptop has " + cores + " cores.");
-        
-        int threadSegment = img.getHeight() / cores;
-        List<MultiThread> threads = new ArrayList<>();
 
+        int threadSegment = img.getHeight() / cores; 
+        List<MultiThread> threads = new ArrayList<>(); 
+
+        // Loop to assign a thread (core) for each segment of the image
         for (int i = 0; i < cores; i++) {
-            int sHeight = i * threadSegment;
-            int eHeight = (i + 1) * threadSegment;
-            if (i + 1 == cores) eHeight = img.getHeight();
+            int sHeight = i * threadSegment; 
+            int eHeight = (i + 1) * threadSegment; 
+            if (i + 1 == cores) eHeight = img.getHeight(); // Adjust last segment to cover remaining height
 
             threads.add(new MultiThread(img, sHeight, eHeight, imagePanel, squareSize));
         }
 
-        long before = System.currentTimeMillis();
+        long before = System.currentTimeMillis(); 
 
         for (MultiThread thread : threads) {
             thread.start();
         }
 
+        // Wait for all threads to finish execution
         for (MultiThread thread : threads) {
             try {
-                thread.join();
+                thread.join(); // Join thread to ensure all are complete
             } catch (InterruptedException ex) {
-                System.out.println(ex);
+                System.out.println(ex); 
             }
         }
 
-        long after = System.currentTimeMillis();
-        System.out.println("Multi-threaded Time (ms): " + (after - before));
+        long after = System.currentTimeMillis(); 
+        System.out.println("Multi-threaded Time (ms): " + (after - before)); 
     }
 }

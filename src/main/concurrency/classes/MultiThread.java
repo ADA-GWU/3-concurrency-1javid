@@ -31,14 +31,18 @@ public class MultiThread extends Thread {
         for (int i = sHeight; i < eHeight; i += squareSize) {
             for (int j = 0; j < width; j += squareSize) {
                 
+                // Ensure boundaries fit within the image dimensions
                 int heightBoundary = Math.min(squareSize, eHeight - i);
                 int widthBoundary = Math.min(squareSize, width - j);
         
+                // Get a list of RGB values for the pixels in the current square
                 List<List<Integer>> rgbList = ImageProcessingUtils.getRgbListBySquareSize(heightBoundary, widthBoundary, img, i, j);
         
+                // Calculate the average color of the pixels in the square
                 List<Integer> avgColor = ImageProcessingUtils.colorAverage(rgbList);
                 Color newColor = new Color(avgColor.get(0), avgColor.get(1), avgColor.get(2));
         
+                // Set the average color to all pixels in the current square
                 ImageProcessingUtils.setNewRgbToImg(heightBoundary, widthBoundary, img, newColor, imagePanel, i, j);
         
                 try {
