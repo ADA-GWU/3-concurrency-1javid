@@ -54,7 +54,7 @@ java src.main.concurrency.Main src\resources\img\long.jpeg 50 M
 <hr />
 
 <details>
-<summary><strong>Sample Input/Output Example</strong></summary>
+<summary><strong>Input/Output Example</strong></summary>
 <br />
 
 <p align="center">
@@ -93,7 +93,6 @@ java src.main.concurrency.Main src\resources\img\long.jpeg 50 M
     <img src="src\resources\gif\multi-thread.gif" alt="multi-thread-process" width="800"/>
 </p>
 
-- **Your laptop has**: 12 cores
 - **Multi-threaded Time (ms)**: 611
 
 </details>
