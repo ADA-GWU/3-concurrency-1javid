@@ -20,6 +20,32 @@ Java(TM) SE Runtime Environment (build 23.0.1+11-39)
 Java HotSpot(TM) 64-Bit Server VM (build 23.0.1+11-39, mixed mode, sharing)
 ```
 
+### Environment Variable
+Before running the project, set the following environment variable:
+
+#### On Linux/macOS:
+
+```bash
+export JAVA_HOME=/path/to/your/jdk
+```
+
+#### On Windows:
+
+```cmd
+set JAVA_HOME=C:\path\to\your\jdk
+```
+
+To verify that the environment variable is set correctly, run:
+
+```bash
+echo $JAVA_HOME
+```
+You should see output similar to this:
+
+```cmd
+C:\Program Files\jdk-23.0.1
+```
+
 ## Setup
 
 ### 1. Clone the repository:
